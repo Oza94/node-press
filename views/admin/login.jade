@@ -1,0 +1,10 @@
+extends layout/base-layout
+
+block page
+  h1 login
+  form(method="post", action="/admin/login")
+    input(type="text", placeholder="username", name="username")
+    br
+    input(type="password", placeholder="password", name="password")
+    br
+    input(type="submit", value="connect")

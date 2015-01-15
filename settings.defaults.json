@@ -1,0 +1,24 @@
+{
+  "app": {
+    "theme": "default",
+    "title": "Node Press"
+  },
+  "session": {
+    "secret": "change this value"
+  },
+  "http": {
+    "host": "localhost",
+    "port": 8080
+  },
+  "db": {
+    "host": "localhost",
+    "name": "nodepress"
+  },
+  "logger": {
+    "console": {
+      "colorize": true,
+      "timestamp": true,
+      "level": "verbose"
+    }
+  }
+}

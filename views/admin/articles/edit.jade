@@ -1,0 +1,15 @@
+
+extends ../layout/page-layout
+
+block content
+  unless article
+    h1 new article
+  else
+    h1 edit article
+  form(method="POST", action="/admin/news")
+    input(type="hidden", name="_id", value="#{article ? article._id : ''}")
+    input(placeholder="title", name="title", value="#{article ? article.title : ''}")
+    br
+    textarea(placeholder="Content here...", name="content") #{article ? article.content : ''}
+    br
+    input(type="submit", value="submit")

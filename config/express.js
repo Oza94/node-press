@@ -6,7 +6,8 @@ var nconf       = require('nconf'),
   flash         = require('connect-flash'),
   session       = require('express-session'),
   bodyParser    = require('body-parser'),
-  cookieParser  = require('cookie-parser');
+  cookieParser  = require('cookie-parser'),
+  MongoStore    = require('connect-mongo')(session);
 
 module.exports = function (app) {
   var appLocals = {};
@@ -29,7 +30,13 @@ module.exports = function (app) {
   app.use(session({
     secret: nconf.get('session:secret'),
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    store: new MongoStore({
+      db: nconf.get('db:name')
+    }),
+    cookie: {
+      maxAge: null
+    }
   }));
 
   app.use(passport.initialize());

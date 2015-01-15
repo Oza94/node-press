@@ -15,7 +15,7 @@ function home(req, res) {
 }
 
 function edit(req, res) {
-  if (req.params.slug) {
+  if (req.params.slug && req.params.slug !== '') {
     Article.findOne({
       slug: req.params.slug
     }, function (err, article) {
@@ -65,7 +65,7 @@ function generateSlug(str, done) {
 }
 
 function save(req, res) {
-  if (req.body._id) {
+  if (req.body._id  && req.body._id !== '') {
     Article.findOne({_id: req.body._id}, function (err, article) {
       if (err) {
         throw err;

@@ -131,6 +131,11 @@ function save(req, res) {
     generateSlug(req.body.title, function (slug) {
       req.body.slug = slug;
 
+      req.body.author = {
+        id: req.user._id,
+        username: req.user.username
+      };
+
       Article
         .create(req.body)
         .then(function(article) {

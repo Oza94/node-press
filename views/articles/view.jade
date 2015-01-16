@@ -7,5 +7,10 @@ block content
     span -
     a(href="/article/edit/#{article.slug}") edit
   h1 #{article.title}
-  p #{article.createdAt}
+
+  p
+    if article.author.id
+      span &nbsp;by&nbsp;
+      b #{article.author.username}
+    span &nbsp;#{article.createdAt}
   p !{article.compiled}

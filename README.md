@@ -62,5 +62,5 @@ gulp develop
 
 If you have left the defaults settings, you can access the app at :
 
- * public: http://localhost:8080
- * admin: http://localhost:8080/admin
+ * public: [http://localhost:8080](http://localhost:8080)
+ * admin: [http://localhost:8080/admin/login](http://localhost:8080/admin/login)

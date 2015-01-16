@@ -1,6 +1,5 @@
 
 var mongoose = require('mongoose'),
-  marked     = require('marked'),
   Article    = mongoose.model('Article');
 
 exports.view = function (req, res) {
@@ -131,7 +130,6 @@ function save(req, res) {
   } else {
     generateSlug(req.body.title, function (slug) {
       req.body.slug = slug;
-      req.body.compiled = marked(req.body.content);
 
       Article
         .create(req.body)

@@ -3,6 +3,9 @@ extends ../layout/page-layout
 
 block content
   a(href="/") < back to list
+  if req.isAuthenticated()
+    span -
+    a(href="/article/edit/#{article.slug}") edit
   h1 #{article.title}
   p #{article.createdAt}
   p !{marked(article.content)}

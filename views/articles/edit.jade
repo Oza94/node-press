@@ -6,7 +6,7 @@ block content
     h1 new article
   else
     h1 edit article
-  form(method="POST", action="/admin/news")
+  form(method="POST", action="/article/edit")
     if article
       input(type="hidden", name="_id", value="#{article._id}")
     input(placeholder="title", name="title", value="#{article ? article.title : ''}")

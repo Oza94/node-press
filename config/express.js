@@ -23,6 +23,7 @@ module.exports = function (app) {
 
   app.set('view engine', 'jade');
 
+
   app.use(cookieParser());
   app.use(bodyParser.urlencoded({
     extended: true
@@ -50,6 +51,12 @@ module.exports = function (app) {
   app.use(function (req, res, next) {
     logger.verbose('%s %s', req.method, req.path);
 
+    next();
+  });
+
+  // expose req object to views
+  app.use(function (req, res, next) {
+    res.locals.req = req;
     next();
   });
 };

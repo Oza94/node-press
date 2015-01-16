@@ -1,8 +1,8 @@
 
 var mongoose      = require('mongoose'),
-    timestamps    = require('mongoose-timestamp'),
-    Schema        = mongoose.Schema,
-    marked        = require('marked');
+  timestamps    = require('mongoose-timestamp'),
+  Schema        = mongoose.Schema,
+  marked        = require('marked');
 
 
 var articleSchema = mongoose.Schema({
@@ -20,6 +20,16 @@ var articleSchema = mongoose.Schema({
   },
   compiled: {
     type: String
+  },
+  author: {
+    username : {
+      type : String
+    },
+    id : {
+      type : mongoose.Schema.Types.ObjectId,
+      ref : "User",
+      require: true
+    }
   }
 });
 

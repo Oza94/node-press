@@ -1,7 +1,9 @@
 
 var mongoose      = require('mongoose'),
     timestamps    = require('mongoose-timestamp'),
-    Schema        = mongoose.Schema;
+    Schema        = mongoose.Schema,
+    marked        = require('marked');
+
 
 var articleSchema = mongoose.Schema({
   title: {
@@ -15,7 +17,19 @@ var articleSchema = mongoose.Schema({
   content: {
     type: String,
     required: true
+  },
+  compiled: {
+    type: String
   }
+});
+
+articleSchema.pre('save', function(next) {
+  var article = this;
+  if (article.content) {
+    article.compiled = marked(article.content);
+  }
+
+  next();
 });
 
 articleSchema.plugin(timestamps);

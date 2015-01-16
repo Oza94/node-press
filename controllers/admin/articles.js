@@ -1,32 +1,51 @@
 
 var mongoose = require('mongoose'),
-  Article    = mongoose.model('Article');
+  Article    = mongoose.model('Article'),
+  marked     = require('marked'),
+  logger     = require('winston');
 
 function home(req, res) {
-  Article.find({}, function (err, articles) {
-    if (err) {
-      throw err;
-    }
-
-    res.render('admin/home', {
-      articles: articles
+  Article
+    .find()
+    .exec()
+    .then(function(articles) {
+      if (!articles) {
+        throw "No articles found";
+      }
+      return articles;
+    })
+    .then(function(articles){
+      // TODO : Replace with middleware handler
+      res.render('admin/home', {
+        articles: articles
+      });
     });
-  })
 }
 
 function edit(req, res) {
   if (req.params.slug && req.params.slug !== '') {
-    Article.findOne({
-      slug: req.params.slug
-    }, function (err, article) {
-      if (err) {
-        throw err;
-      }
+    Article
+      .findOne({slug: req.params.slug})
+      .exec()
+      .then(function(article) {
+        for (var attribute in req.body) {
+          if (article.hasOwnProperty(attribute)) {
+            // No security
+            article[attribute] = req.body[attribute];
+          }
+        }
 
-      res.render('admin/articles/edit', {
-        article: article
+        if (!article) {
+          throw "No article found";
+        }
+        article.save();
+        return article;
+      })
+      .then(function(article){
+        res.render('admin/articles/edit', {
+          article: article
+        });
       });
-    });
   } else {
     res.render('admin/articles/edit');
   }
@@ -34,11 +53,11 @@ function edit(req, res) {
 
 function slugify(text) {
   return text.toString().toLowerCase()
-      .replace(/\s+/g, '-')           // replace spaces with -
-      .replace(/[^\w\-]+/g, '')       // remove all non-word chars
-      .replace(/\-\-+/g, '-')         // replace multiple - with single -
-      .replace(/^-+/, '')             // trim - from start of text
-      .replace(/-+$/, '');            // trim - from end of text
+    .replace(/\s+/g, '-')           // replace spaces with -
+    .replace(/[^\w\-]+/g, '')       // remove all non-word chars
+    .replace(/\-\-+/g, '-')         // replace multiple - with single -
+    .replace(/^-+/, '')             // trim - from start of text
+    .replace(/-+$/, '');            // trim - from end of text
 }
 
 function generateSlug(str, done) {
@@ -66,35 +85,45 @@ function generateSlug(str, done) {
 
 function save(req, res) {
   if (req.body._id  && req.body._id !== '') {
-    Article.findOne({_id: req.body._id}, function (err, article) {
-      if (err) {
-        throw err;
-      }
-
-      article.title = req.body.title;
-      article.content = req.body.content;
-
-      article.save(function (err) {
-        if (err) {
-          throw err;
+    Article.findOne({_id: req.body._id})
+      .exec()
+      .then(function (article) {
+        if (!article) {
+          throw "Article not found";
         }
-
-        res.redirect('/admin/');
+        article.title = req.body.title;
+        article.content = req.body.content;
+        return article;
+      })
+      .then(function(article){
+        article.save(function (err) {
+          if (err) {
+            throw err;
+          }
+          res.redirect('/admin/');
+        });
       });
-    });
   } else {
     generateSlug(req.body.title, function (slug) {
       req.body.slug = slug;
+      req.body.compiled = marked(req.body.content);
 
-      var article = new Article(req.body);
-
-      article.save(function (err) {
-        if (err) {
-          throw err;
-        }
-
-        res.redirect('/admin/');
-      });
+      Article
+        .create(req.body)
+        .then(function(article) {
+          if (!article) {
+            throw "No article found";
+          }
+          return article;
+        })
+        .then(function(article){
+          article.save(function (err) {
+            if (err) {
+              throw err;
+            }
+            res.redirect('/admin/');
+          });
+        });
     });
   }
 }

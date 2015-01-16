@@ -11,5 +11,5 @@ exports.view = function (req, res) {
     res.render('articles/view', {
       article: article
     });
-  })
+  });
 };

@@ -7,3 +7,12 @@ block content
         a(href="/article/#{article.slug}") #{article.title}
         span &nbsp;#{article.createdAt}
         hr
+    if pages > 1
+      - var p = 0
+      while p < pages
+        if p == page
+          b #{p}&nbsp;
+        else
+          a(href="/?page=#{p}") #{p}
+          | &nbsp;
+        - p += 1

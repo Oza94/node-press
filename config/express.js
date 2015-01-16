@@ -7,6 +7,7 @@ var nconf       = require('nconf'),
   session       = require('express-session'),
   bodyParser    = require('body-parser'),
   cookieParser  = require('cookie-parser'),
+  marked        = require('marked'),
   MongoStore    = require('connect-mongo')(session);
 
 module.exports = function (app) {
@@ -16,6 +17,7 @@ module.exports = function (app) {
   appLocals.title = nconf.get('app:title');
 
   app.locals.app = appLocals;
+  app.locals.marked = marked;
 
   app.use(express.static('public'));
 

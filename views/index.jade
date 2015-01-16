@@ -1,6 +1,9 @@
-html
-  head
-    title #{app.title}
-    link(href="/themes/#{app.theme}/index.css", rel="stylesheet")
-  body
-    h1 #{app.title}
+extends layout/page-layout
+
+block content
+  ul
+    each article in articles
+      li
+        a(href="/article/#{article.slug}") #{article.title}
+        span &nbsp;#{article.createdAt}
+        hr

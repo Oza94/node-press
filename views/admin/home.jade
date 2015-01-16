@@ -8,3 +8,5 @@ block content
       li
         a(href="/admin/news/#{article.slug}") #{article.title}
         span #{article.createdAt}
+        div !{marked(article.content)}
+        hr

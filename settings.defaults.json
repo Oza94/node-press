@@ -1,6 +1,5 @@
 {
   "app": {
-    "theme": "default",
     "title": "Node Press"
   },
   "session": {

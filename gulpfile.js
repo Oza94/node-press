@@ -2,10 +2,8 @@
 var gulp    = require('gulp'),
     nodemon = require('gulp-nodemon'),
     bump    = require('gulp-bump'),
-    stylus  = require('gulp-stylus'),
     jshint  = require('gulp-jshint'),
     stylish = require('jshint-stylish'),
-    pkg     = require('./package.json'),
     paths   = {};
 
 paths.serverScripts = [
@@ -13,10 +11,6 @@ paths.serverScripts = [
   './config/**/*.js',
   './models/**/*.js',
   './controllers/**/*.js'
-];
-
-paths.themeStyles = [
-  './public/themes/default/src/index.styl'
 ];
 
 gulp.task('develop', ['jshint'], function () {
@@ -47,10 +41,4 @@ gulp.task('bump:major', function () {
   return gulp.src('./package.json')
     .pipe(bump({type: 'major'}))
     .pipe(gulp.dest('./'));
-});
-
-gulp.task('theme-style', function () {
-  return gulp.src(paths.themeStyles)
-    .pipe(stylus())
-    .pipe(gulp.dest('./public/themes/default'));
 });

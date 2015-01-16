@@ -11,6 +11,13 @@ block content
       input(type="hidden", name="_id", value="#{article._id}")
     input(placeholder="title", name="title", value="#{article ? article.title : ''}")
     br
+    label
+      if article && article.published
+        input(type="checkbox", name="published", checked)
+      else
+        input(type="checkbox", name="published")
+      | published
+    br
     textarea(placeholder="Content here...", name="content") #{article ? article.content : ''}
     br
     input(type="submit", value="submit")

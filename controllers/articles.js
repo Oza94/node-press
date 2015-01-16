@@ -14,6 +14,21 @@ exports.view = function (req, res) {
   });
 };
 
+exports.drafts = function (req, res) {
+  Article.find({})
+    .sort('-createdAt')
+    .where('published').ne(true)
+    .exec(function (err, articles) {
+      if (err) {
+        throw err;
+      }
+
+      res.render('articles/drafts', {
+        articles: articles
+      });
+    });
+};
+
 function slugify(text) {
   return text.toString().toLowerCase()
     .replace(/\s+/g, '-')           // replace spaces with -
@@ -108,6 +123,8 @@ function generateSlug(str, done) {
 }
 
 function save(req, res) {
+  req.body.published = req.body.published === 'on';
+
   if (req.body._id  && req.body._id !== '') {
     Article.findOne({_id: req.body._id})
       .exec()
@@ -115,8 +132,11 @@ function save(req, res) {
         if (!article) {
           throw "Article not found";
         }
+
         article.title = req.body.title;
         article.content = req.body.content;
+        article.published = req.body.published;
+
         return article;
       })
       .then(function(article){

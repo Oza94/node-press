@@ -22,13 +22,6 @@ cd node-press
 npm install
 ```
 
-If you start from scratch, you probably want to build the default theme of the project :
-
-```bash
-# build default theme
-gulp theme-default
-```
-
 ## configure
 
 This project uses [nconf](https://github.com/flatiron/nconf), and will merge (in-order) its configuration from different locations. Higher number means higher priority :

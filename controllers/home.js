@@ -12,8 +12,9 @@ exports.index = function (req, res) {
       throw err;
     }
 
-    Article.find({})
-      .sort('-createdAt')
+    Article.find({
+      'published': true
+    }).sort('-createdAt')
       .skip(skip)
       .limit(limit)
       .exec(function (err, articles) {

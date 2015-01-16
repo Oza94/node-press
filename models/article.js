@@ -21,6 +21,11 @@ var articleSchema = mongoose.Schema({
   compiled: {
     type: String
   },
+  published: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
   author: {
     username : {
       type : String

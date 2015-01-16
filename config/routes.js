@@ -8,10 +8,12 @@ var passport     = require('passport'),
 module.exports = function (app) {
   app.get('/', home.index);
 
+  app.get('/drafts', auth.requireLogin, articles.drafts);
   app.get('/article/:slug', articles.view);
   app.get('/article/edit/new', auth.requireLogin, articles.edit);
   app.get('/article/edit/:slug', auth.requireLogin, articles.edit);
   app.post('/article/edit', auth.requireLogin, articles.save);
+
 
   app.get('/admin/login', authentication.login);
   app.post('/admin/login', passport.authenticate('local', {

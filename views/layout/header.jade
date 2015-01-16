@@ -1,7 +1,9 @@
 if req.isAuthenticated()
   a(href="/admin/logout") disconnect
-  span -
+  | -
   a(href="/article/edit/new") new article
+  | -
+  a(href="/drafts") drafts
   hr
 h1
   a(href="/") #{app.title}

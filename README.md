@@ -40,6 +40,14 @@ This project uses [nconf](https://github.com/flatiron/nconf), and will merge (in
 
 For the moment you can refer to ```settings.defaults.json``` to know the list of configuration options.
 
+### create an account
+
+You'll need to create an account to use the admin part of the site. You can use the provided script :
+
+```bash
+node tools/createaccount
+```
+
 ## running
 
 Both of the following commands will work :
@@ -51,3 +59,8 @@ node index
 # start the project with reload on file change a interactive deamon
 gulp develop
 ```
+
+If you have left the defaults settings, you can access the app at :
+
+ * public: http://localhost:8080
+ * admin: http://localhost:8080/admin

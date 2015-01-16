@@ -8,4 +8,4 @@ block content
     a(href="/article/edit/#{article.slug}") edit
   h1 #{article.title}
   p #{article.createdAt}
-  p !{marked(article.content)}
+  p !{article.compiled}

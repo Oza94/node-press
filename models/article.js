@@ -45,7 +45,11 @@ var articleSchema = mongoose.Schema({
 articleSchema.pre('save', function(next) {
   var article = this,
     re = new RegExp("<p>(.*?)</p>"),
-    options = {"allowedTags": [ 'b', 'i', 'em', 'strong', 'a', 'img'],
+    options = {
+      "allowedTags": [
+        'b', 'i', 'em', 'strong', 'a', 'img', 'p', 'h1', 'h2', 'h3', 'h4',
+        'h5', 'h6', 'ul', 'li', 'ol', 'pre'
+      ],
       "allowedAttributes": {
         'a': [ 'href' ],
         'img': ['src', 'alt']

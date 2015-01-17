@@ -1,14 +1,13 @@
 extends ../layout/page-layout
 
 block content
-  ul
-    each article in articles
-      article
-        h2
-          a(href="/article/#{article.slug}") #{article.title}
-          small
-            if article.author.id
-              span &nbsp;by&nbsp;
-              b #{article.author.username}
-            span &nbsp;#{moment(article.createdAt).fromNow()}
-        hr
+  each article in articles
+    article
+      h2
+        a(href="/article/#{article.slug}") #{article.title}
+        small
+          if article.author.id
+            span &nbsp;by&nbsp;
+            b #{article.author.username}
+          span &nbsp;#{moment(article.createdAt).fromNow()}
+      hr

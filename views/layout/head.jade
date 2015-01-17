@@ -1,4 +1,9 @@
 head
   title #{app.title}
+
+  meta(charset="utf-8")
+  meta(http-equiv="X-UA-Compatible", content="IE=edge")
+  meta(name="viewport", content="width=device-width, initial-scale=1")
+
   if app.theme
-  link(href="/themes/#{app.theme}/index.css", rel="stylesheet")
+    link(href="/themes/#{app.theme}/index.css", rel="stylesheet")

@@ -1,21 +1,25 @@
 extends layout/page-layout
 
 block content
-  ul
+  section.articles
     each article in articles
-      li
-        a(href="/article/#{article.slug}") #{article.title}
-        if article.author.id
-          span &nbsp;by&nbsp;
-          b #{article.author.username}
-        span &nbsp;#{article.createdAt}
+      article
+        h2
+          a(href="/article/#{article.slug}") #{article.title}
+          small
+            if article.author.id
+              span &nbsp;by&nbsp;
+              b #{article.author.username}
+            span &nbsp;#{moment(article.createdAt).fromNow()}
+        p #{article.preview}
         hr
+  section.pagination.text-center
     if pages > 1
       - var p = 0
-      while p < pages
+      while p < pages - 1
         if p == page
-          b #{p}&nbsp;
+          b #{p + 1}&nbsp;
         else
-          a(href="/?page=#{p}") #{p}
+          a(href="/?page=#{p}") #{p + 1}
           | &nbsp;
         - p += 1

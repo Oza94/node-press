@@ -1,6 +1,6 @@
 {
   "name": "node-press",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "repository": "https://github.com/Oza94/node-press.git",
   "description": "A minimalist content management system running on node.js.",
   "dependencies": {
@@ -13,11 +13,14 @@
     "jade": "^1.9.0",
     "marked": "^0.3.2",
     "merge": "^1.2.0",
+    "moment": "^2.9.0",
     "mongoose": "^3.8.21",
     "mongoose-timestamp": "^0.3.0",
     "nconf": "^0.7.1",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
+    "sanitize-html": "^1.5.1",
+    "slugg": "^0.1.2",
     "winston": "^0.8.3"
   },
   "devDependencies": {

@@ -1,0 +1,3 @@
+[submodule "public/themes/default"]
+	path = public/themes/default
+	url = https://github.com/node-press/node-press-theme.git

@@ -1,7 +1,7 @@
 
 var mongoose      = require('mongoose'),
   timestamps    = require('mongoose-timestamp'),
-  Schema        = mongoose.Schema,
+  sanitizer     = require('sanitize-html'),
   marked        = require('marked');
 
 
@@ -26,6 +26,10 @@ var articleSchema = mongoose.Schema({
     required: true,
     default: false
   },
+  preview : {
+    type: String,
+    default : ""
+  },
   author: {
     username : {
       type : String
@@ -39,9 +43,21 @@ var articleSchema = mongoose.Schema({
 });
 
 articleSchema.pre('save', function(next) {
-  var article = this;
+  var article = this,
+    re = new RegExp("<p>(.*?)</p>"),
+    options = {"allowedTags": [ 'b', 'i', 'em', 'strong', 'a', 'img'],
+      "allowedAttributes": {
+        'a': [ 'href' ],
+        'img': ['src', 'alt']
+      }
+    },
+    result = [];
   if (article.content) {
-    article.compiled = marked(article.content);
+    article.compiled = sanitizer((marked(article.content)), options);
+    result = re.exec(article.compiled);
+    if (result) {
+      article.preview = result[1].substring(0, 200);
+    }
   }
 
   next();

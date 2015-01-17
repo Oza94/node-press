@@ -1,6 +1,7 @@
 {
   "app": {
-    "title": "Node Press"
+    "title": "Node Press",
+    "theme": "default"
   },
   "session": {
     "secret": "change this value"

@@ -1,10 +1,14 @@
 extends ../layout/base-layout
 
 block page
-  h1 login
-  form(method="post", action="/admin/login")
-    input(type="text", placeholder="username", name="username")
-    br
-    input(type="password", placeholder="password", name="password")
-    br
-    input(type="submit", value="connect")
+  .container.login-view
+    h1.text-center login
+    form(method="post", action="/admin/login")
+      .form-group
+        label(for="username") username
+        input(type="text", placeholder="username", name="username")
+      .form-group
+        label(for="username") password
+        input(type="password", placeholder="password", name="password")
+      .form-group.text-center
+        input(type="submit", value="connect")

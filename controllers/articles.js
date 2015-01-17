@@ -1,6 +1,7 @@
 
-var mongoose = require('mongoose'),
-  Article    = mongoose.model('Article');
+var mongoose  = require('mongoose'),
+    slug      = require('slugg'),
+    Article   = mongoose.model('Article');
 
 exports.view = function (req, res) {
   Article.findOne({slug: req.params.slug}, function (err, article) {
@@ -39,26 +40,25 @@ function slugify(text) {
 }
 
 function generateSlug(str, done) {
-  var baseSlug = slugify(str),
-    slug       = baseSlug,
-    counter    = 1;
 
-  function cb(err, article) {
+  var baseSlug  =  slug(str),
+      slugz     = baseSlug,
+      count     = 1;
+
+  function checkSlugExists(err, article) {
     if (err) {
       throw err;
-    }
+    } else if (article) {
+      slugz = baseSlug + "." + count;
+      count += 1;
 
-    if (article) {
-      // slug already exists, try another one
-      slug = baseSlug + '-' + (counter++);
-
-      Article.findOne({slug: slug}, cb);
+      Article.findOne({slug: slugz}, checkSlugExists);
     } else {
-      done(slug);
+      done(slugz);
     }
   }
 
-  Article.findOne({slug: slug}, cb);
+  Article.findOne({slug: slugz}, checkSlugExists);
 }
 
 function edit(req, res) {
@@ -90,42 +90,10 @@ function edit(req, res) {
   }
 }
 
-function slugify(text) {
-  return text.toString().toLowerCase()
-    .replace(/\s+/g, '-')           // replace spaces with -
-    .replace(/[^\w\-]+/g, '')       // remove all non-word chars
-    .replace(/\-\-+/g, '-')         // replace multiple - with single -
-    .replace(/^-+/, '')             // trim - from start of text
-    .replace(/-+$/, '');            // trim - from end of text
-}
-
-function generateSlug(str, done) {
-  var baseSlug = slugify(str),
-    slug       = baseSlug,
-    counter    = 1;
-
-  function cb(err, article) {
-    if (err) {
-      throw err;
-    }
-
-    if (article) {
-      // slug already exists, try another one
-      slug = baseSlug + '-' + (counter++);
-
-      Article.findOne({slug: slug}, cb);
-    } else {
-      done(slug);
-    }
-  }
-
-  Article.findOne({slug: slug}, cb);
-}
-
 function save(req, res) {
   req.body.published = req.body.published === 'on';
 
-  if (req.body._id  && req.body._id !== '') {
+  if ("_id" in req.body) {
     Article.findOne({_id: req.body._id})
       .exec()
       .then(function (article) {

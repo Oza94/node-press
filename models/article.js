@@ -26,6 +26,10 @@ var articleSchema = mongoose.Schema({
     required: true,
     default: false
   },
+  preview : {
+    type: String,
+    default : ""
+  },
   author: {
     username : {
       type : String
@@ -39,9 +43,15 @@ var articleSchema = mongoose.Schema({
 });
 
 articleSchema.pre('save', function(next) {
-  var article = this;
+  var article = this,
+  re = new RegExp("<p>(.*?)</p>"),
+  result = [];
   if (article.content) {
     article.compiled = marked(article.content);
+    result = re.exec(article.compiled);
+    if (result) {
+      article.preview = result[1].substring(0, 200);
+    }
   }
 
   next();

@@ -1,4 +1,4 @@
 head
   title #{app.title}
-  //- wait 0.2
-  //- link(href="/themes/#{app.theme}/index.css", rel="stylesheet")
+  if app.theme
+  link(href="/themes/#{app.theme}/index.css", rel="stylesheet")

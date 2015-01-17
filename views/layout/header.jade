@@ -1,11 +1,11 @@
-if req.isAuthenticated()
-  a(href="/admin/logout") disconnect
-  | -
-  a(href="/article/edit/new") new article
-  | -
-  a(href="/drafts") drafts
-  hr
-h1
-  a(href="/") #{app.title}
+header
+  .admin
+    if req.isAuthenticated()
+      a.pull-right(href="/admin/logout") disconnect
+      a(href="/article/edit/new") new article
+      | &nbsp;-&nbsp;
+      a(href="/drafts") drafts
+  h1
+    a(href="/") #{app.title}
 
-hr
+  hr

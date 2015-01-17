@@ -3,10 +3,12 @@ extends ../layout/page-layout
 block content
   ul
     each article in articles
-      li
-        a(href="/article/edit/#{article.slug}") #{article.title}
-        if article.author.id
-          span &nbsp;by&nbsp;
-          b #{article.author.username}
-        span &nbsp;#{article.createdAt}
+      article
+        h2
+          a(href="/article/#{article.slug}") #{article.title}
+          small
+            if article.author.id
+              span &nbsp;by&nbsp;
+              b #{article.author.username}
+            span &nbsp;#{moment(article.createdAt).fromNow()}
         hr

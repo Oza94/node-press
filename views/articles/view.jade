@@ -6,11 +6,11 @@ block content
   if req.isAuthenticated()
     span -
     a(href="/article/edit/#{article.slug}") edit
-  h1 #{article.title}
-
-  p
-    if article.author.id
-      span &nbsp;by&nbsp;
-      b #{article.author.username}
-    span &nbsp;#{article.createdAt}
+  h1
+    | #{article.title}
+    small
+      if article.author.id
+        span &nbsp;by&nbsp;
+        b #{article.author.username}
+      span &nbsp;#{moment(article.createdAt).fromNow()}
   p !{article.compiled}

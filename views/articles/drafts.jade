@@ -4,7 +4,7 @@ block content
   each article in articles
     article
       h2
-        a(href="/article/#{article.slug}") #{article.title}
+        a(href="/article/edit/#{article.slug}") #{article.title}
         small
           if article.author.id
             span &nbsp;by&nbsp;

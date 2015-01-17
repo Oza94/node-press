@@ -1,11 +1,16 @@
 header
-  .admin
-    if req.isAuthenticated()
-      a.pull-right(href="/admin/logout") disconnect
+  if req.isAuthenticated()
+    .admin
+      .pull-right
+        b #{req.user.username}
+        | &nbsp;-&nbsp;
+        a(href="/admin/logout") disconnect
       a(href="/article/edit/new") new article
       | &nbsp;-&nbsp;
       a(href="/drafts") drafts
-  h1
-    a(href="/") #{app.title}
+    hr
+  .navbar
+    h1
+      a(href="/") #{app.title}
 
   hr

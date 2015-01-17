@@ -15,7 +15,7 @@ You'll need the following software installed on your machine:
 Clone the project and install dependencies :
 
 ```bash
-git clone https://github.com/Oza94/node-press.git
+git clone --recursive https://github.com/node-press/node-press.git
 cd node-press
 
 # install node dependencies

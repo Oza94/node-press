@@ -22,6 +22,14 @@ cd node-press
 npm install
 ```
 
+### default theme when cloning
+
+The default theme is added as a submodule, to install it run :
+
+```bash
+git submodule update --init --recursive
+```
+
 ## configure
 
 This project uses [nconf](https://github.com/flatiron/nconf), and will merge (in-order) its configuration from different locations. Higher number means higher priority :

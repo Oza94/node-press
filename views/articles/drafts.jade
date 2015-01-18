@@ -10,4 +10,5 @@ block content
             span &nbsp;by&nbsp;
             b #{article.author.username}
           span &nbsp;#{moment(article.createdAt).fromNow()}
+          span &nbsp;Publication scheduled #{moment(article.publishAt).calendar()}
       hr

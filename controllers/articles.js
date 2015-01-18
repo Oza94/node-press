@@ -1,6 +1,7 @@
 
 var mongoose  = require('mongoose'),
     slug      = require('slugg'),
+    moment    = require('moment'),
     Article   = mongoose.model('Article');
 
 exports.view = function (req, res) {
@@ -104,7 +105,11 @@ function save(req, res) {
         article.title = req.body.title;
         article.content = req.body.content;
         article.published = req.body.published;
-
+        if (article.published) {
+          article.publishAt = moment().toDate();
+        } else {
+          article.publishAt = moment(req.body.publishAtDate + "T" +  req.body.publishAtTime).toDate();
+        }
         return article;
       })
       .then(function(article){

@@ -2,6 +2,7 @@
 var mongoose      = require('mongoose'),
   timestamps    = require('mongoose-timestamp'),
   sanitizer     = require('sanitize-html'),
+  jobs          = require('../services/jobs'),
   marked        = require('marked');
 
 
@@ -29,6 +30,14 @@ var articleSchema = mongoose.Schema({
   preview : {
     type: String,
     default : ""
+  },
+  createAt: {
+    type: Date,
+    default : Date.now,
+    require: true
+  },
+  publishAt: {
+    type: Date
   },
   author: {
     username : {
@@ -64,8 +73,32 @@ articleSchema.pre('save', function(next) {
     }
   }
 
+  // If article hasnt been published and got a publish date
+  if (!article.published && article.publishAt) {
+    console.log("Throwing job start");
+    jobs
+      .create('articlePublisher', {article: article})
+      .save()
+      .on('complete', function(result){
+        // I Think the job has one main goal is to wait. And Say when he had wait enough
+        // Then activate the change on db
+        // Need to check if it doensnt block the saving doc
+
+        mongoose.model('Article')
+          .findOneAndUpdate({_id: article._id}, {published: true})
+          .exec()
+          .then(function(article){
+            console.log(article, "job finished ! ", result);
+          })
+      })
+      .on('failed', function(err){
+        console.log("Job error ! ", err);
+      });
+  }
+
   next();
 });
+
 
 articleSchema.plugin(timestamps);
 

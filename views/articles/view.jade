@@ -12,5 +12,5 @@ block content
       if article.author.id
         span &nbsp;by&nbsp;
         b #{article.author.username}
-      span &nbsp;#{moment(article.createdAt).fromNow()}
+      span &nbsp;#{moment(article.pusblishAt).fromNow()}
   p !{article.compiled}

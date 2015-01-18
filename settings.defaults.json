@@ -20,5 +20,9 @@
       "timestamp": true,
       "level": "verbose"
     }
+  },
+  "redis" : {
+    "port" : 6379,
+    "host" : "localhost"
   }
 }

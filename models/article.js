@@ -53,7 +53,7 @@ var articleSchema = mongoose.Schema({
 articleSchema.pre('save', function(next) {
   var article = this,
     re = new RegExp("<p>(.*?)</p>"),
-    options = {
+    bodyOptions = {
       "allowedTags": [
         'b', 'i', 'em', 'strong', 'a', 'img', 'p', 'h1', 'h2', 'h3', 'h4',
         'h5', 'h6', 'ul', 'li', 'ol', 'pre'
@@ -63,12 +63,14 @@ articleSchema.pre('save', function(next) {
         'img': ['src', 'alt']
       }
     },
+    previewOptions = {"allowedTags" : [], allowedAttributes: {}},
     result = [];
+
   if (article.content) {
-    article.compiled = sanitizer((marked(article.content)), options);
+    article.compiled = sanitizer((marked(article.content)), bodyOptions);
     result = re.exec(article.compiled);
     if (result) {
-      article.preview = result[1].substring(0, 200);
+      article.preview = sanitizer((result[1].substring(0, 200)), previewOptions);
     }
   }
 

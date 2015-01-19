@@ -3,6 +3,9 @@
   "version": "0.2.0",
   "repository": "https://github.com/Oza94/node-press.git",
   "description": "A minimalist content management system running on node.js.",
+  "scripts": {
+    "test": "mocha --timeout=10000"
+  },
   "dependencies": {
     "body-parser": "^1.10.1",
     "connect-flash": "^0.1.1",

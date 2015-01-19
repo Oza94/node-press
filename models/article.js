@@ -1,7 +1,9 @@
 
 var mongoose    = require('mongoose'),
+  queue         = {}, // The queue where timeOutId are stored
   timestamps    = require('mongoose-timestamp'),
   sanitizer     = require('sanitize-html'),
+  moment        = require('moment'),
   marked        = require('marked');
 
 
@@ -52,6 +54,8 @@ var articleSchema = mongoose.Schema({
 
 articleSchema.pre('save', function(next) {
   var article = this,
+    timerId,
+    timeToWait,
     re = new RegExp("<p>(.*?)</p>"),
     bodyOptions = {
       "allowedTags": [
@@ -76,9 +80,17 @@ articleSchema.pre('save', function(next) {
 
   // If article hasnt been published and got a publish date
   if (!article.published && article.publishAt) {
-    // Handle publish job launcher
+    // If publication was already scheduled, we clear the queue and schedule it again.
+    if (queue[article._id]) {
+      clearTimeout(queue[article._id]);
+    }
+    timeToWait = moment(article.publishAt).diff(moment());
+    timerId = setTimeout(function(){
+      article.published = true;
+      article.save();
+    }, timeToWait);
+    queue[article._id] = timerId;
   }
-
   next();
 });
 

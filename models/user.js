@@ -1,6 +1,5 @@
 
 var mongoose    = require('mongoose'),
-    Schema        = mongoose.Schema,
     logger        = require('winston'),
     crypto        = require('crypto');
 

@@ -16,7 +16,7 @@ var articleSchema = mongoose.Schema({
   },
   slug: {
     type: String,
-    require: true,
+    required: true,
   },
   content: {
     type: String,

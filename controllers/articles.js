@@ -118,7 +118,7 @@ function save(req, res) {
       .then(function(article){
         // In a .then because we have to wait the end of the save to read the slug.
         res.redirect('/article/' + article.slug);
-      })
+      });
   }
 }
 

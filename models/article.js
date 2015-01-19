@@ -4,7 +4,6 @@ var mongoose    = require('mongoose'),
   timestamps    = require('mongoose-timestamp'),
   sanitizer     = require('sanitize-html'),
   slug          = require('slugg'),
-  Promise       = require('bluebird'),
   moment        = require('moment'),
   marked        = require('marked');
 

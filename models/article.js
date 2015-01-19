@@ -1,8 +1,7 @@
 
-var mongoose      = require('mongoose'),
+var mongoose    = require('mongoose'),
   timestamps    = require('mongoose-timestamp'),
   sanitizer     = require('sanitize-html'),
-  jobs          = require('../services/jobs'),
   marked        = require('marked');
 
 
@@ -54,7 +53,7 @@ var articleSchema = mongoose.Schema({
 articleSchema.pre('save', function(next) {
   var article = this,
     re = new RegExp("<p>(.*?)</p>"),
-    options = {
+    bodyOptions = {
       "allowedTags": [
         'b', 'i', 'em', 'strong', 'a', 'img', 'p', 'h1', 'h2', 'h3', 'h4',
         'h5', 'h6', 'ul', 'li', 'ol', 'pre'
@@ -64,36 +63,20 @@ articleSchema.pre('save', function(next) {
         'img': ['src', 'alt']
       }
     },
+    previewOptions = {"allowedTags" : [], allowedAttributes: {}},
     result = [];
+
   if (article.content) {
-    article.compiled = sanitizer((marked(article.content)), options);
+    article.compiled = sanitizer((marked(article.content)), bodyOptions);
     result = re.exec(article.compiled);
     if (result) {
-      article.preview = result[1].substring(0, 200);
+      article.preview = sanitizer((result[1].substring(0, 200)), previewOptions);
     }
   }
 
   // If article hasnt been published and got a publish date
   if (!article.published && article.publishAt) {
-    console.log("Throwing job start");
-    jobs
-      .create('articlePublisher', {article: article})
-      .save()
-      .on('complete', function(result){
-        // I Think the job has one main goal is to wait. And Say when he had wait enough
-        // Then activate the change on db
-        // Need to check if it doensnt block the saving doc
-
-        mongoose.model('Article')
-          .findOneAndUpdate({_id: article._id}, {published: true})
-          .exec()
-          .then(function(article){
-            console.log(article, "job finished ! ", result);
-          })
-      })
-      .on('failed', function(err){
-        console.log("Job error ! ", err);
-      });
+    // Handle publish job launcher
   }
 
   next();

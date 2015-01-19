@@ -2,3 +2,4 @@
 node_modules/
 
 settings.json
+public/themes/default/index.css

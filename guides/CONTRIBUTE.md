@@ -51,3 +51,5 @@ Must be one of the following:
 * **perf**: A code change that improves performance
 * **test**: Adding missing tests
 * **chore**: Changes to the build process or auxiliary tools and libraries such as documentation generation
+
+Prefix with **wip-** if this is a work in progress. e.g. **wip-feat(i18n)**

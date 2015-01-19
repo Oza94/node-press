@@ -3,6 +3,8 @@ var mongoose    = require('mongoose'),
   queue         = {}, // The queue where timeOutId are stored
   timestamps    = require('mongoose-timestamp'),
   sanitizer     = require('sanitize-html'),
+  slug          = require('slugg'),
+  Promise       = require('bluebird'),
   moment        = require('moment'),
   marked        = require('marked');
 
@@ -14,7 +16,7 @@ var articleSchema = mongoose.Schema({
   },
   slug: {
     type: String,
-    required: true
+    require: true,
   },
   content: {
     type: String,
@@ -52,6 +54,32 @@ var articleSchema = mongoose.Schema({
   }
 });
 
+
+generateSlug = function (str, id, done) {
+  var baseSlug  =  slug(str),
+    slugz     = baseSlug,
+    Article   = mongoose.model('Article'),
+    count     = 1;
+
+  function checkSlugExists(err, article) {
+    if (article && article._id.toString() === id.toString()) {
+      done(slugz);
+    }
+    if (err) {
+      throw err;
+    } else if (article) {
+      slugz = baseSlug + "." + count;
+      count += 1;
+
+      Article.findOne({slug: slugz}, checkSlugExists);
+    } else {
+      done(slugz);
+    }
+  }
+
+  Article.findOne({slug: slugz}, checkSlugExists);
+};
+
 articleSchema.pre('save', function(next) {
   var article = this,
     timerId,
@@ -69,7 +97,6 @@ articleSchema.pre('save', function(next) {
     },
     previewOptions = {"allowedTags" : [], allowedAttributes: {}},
     result = [];
-
   if (article.content) {
     article.compiled = sanitizer((marked(article.content)), bodyOptions);
     result = re.exec(article.compiled);
@@ -91,7 +118,14 @@ articleSchema.pre('save', function(next) {
     }, timeToWait);
     queue[article._id] = timerId;
   }
-  next();
+
+  generateSlug(article.title, article._id, function(slug){
+    if (article.slug !== slug)
+    article.slug = slug;
+    next();
+  });
+
+
 });
 
 

@@ -1,13 +1,14 @@
 
 var mongoose  = require('mongoose'),
-    slug      = require('slugg'),
-    moment    = require('moment'),
-    Article   = mongoose.model('Article');
+  moment    = require('moment'),
+  Article   = mongoose.model('Article');
 
 exports.view = function (req, res) {
   Article.findOne({slug: req.params.slug}, function (err, article) {
     if (err) {
       throw err;
+    } else if (!article) {
+      throw "Article not found";
     }
 
     res.render('articles/view', {
@@ -31,36 +32,7 @@ exports.drafts = function (req, res) {
     });
 };
 
-function slugify(text) {
-  return text.toString().toLowerCase()
-    .replace(/\s+/g, '-')           // replace spaces with -
-    .replace(/[^\w\-]+/g, '')       // remove all non-word chars
-    .replace(/\-\-+/g, '-')         // replace multiple - with single -
-    .replace(/^-+/, '')             // trim - from start of text
-    .replace(/-+$/, '');            // trim - from end of text
-}
 
-function generateSlug(str, done) {
-
-  var baseSlug  =  slug(str),
-      slugz     = baseSlug,
-      count     = 1;
-
-  function checkSlugExists(err, article) {
-    if (err) {
-      throw err;
-    } else if (article) {
-      slugz = baseSlug + "." + count;
-      count += 1;
-
-      Article.findOne({slug: slugz}, checkSlugExists);
-    } else {
-      done(slugz);
-    }
-  }
-
-  Article.findOne({slug: slugz}, checkSlugExists);
-}
 
 function edit(req, res) {
   if (req.params.slug && req.params.slug !== '') {
@@ -121,31 +93,32 @@ function save(req, res) {
         });
       });
   } else {
-    generateSlug(req.body.title, function (slug) {
-      req.body.slug = slug;
+    req.body.author = {
+      id: req.user._id,
+      username: req.user.username
+    };
 
-      req.body.author = {
-        id: req.user._id,
-        username: req.user.username
-      };
-
-      Article
-        .create(req.body)
-        .then(function(article) {
-          if (!article) {
-            throw "No article found";
+    Article
+      .create(req.body)
+      .then(function(article) {
+        if (!article) {
+          throw "No article found";
+        }
+        return article;
+      })
+      .then(function(article){
+        article.save(function (err) {
+          if (err) {
+            throw err;
           }
-          return article;
-        })
-        .then(function(article){
-          article.save(function (err) {
-            if (err) {
-              throw err;
-            }
-            res.redirect('/article/' + article.slug);
-          });
+
         });
-    });
+        return article;
+      })
+      .then(function(article){
+        // In a .then because we have to wait the end of the save to read the slug.
+        res.redirect('/article/' + article.slug);
+      })
   }
 }
 

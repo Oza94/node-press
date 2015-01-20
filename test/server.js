@@ -8,15 +8,21 @@ var nconf   = require('nconf'),
     User    = null,
     server  = null;
 
-logger.remove(logger.transports.Console);
+exports.prepareNconf = function () {
+  logger.remove(logger.transports.Console);
 
-nconf.argv()
-  .env()
-  .file({file: './settings.defaults.json'});
+  nconf.argv()
+      .env()
+      .file({file: './settings.defaults.json'});
 
-nconf.set('db:name', nconf.get('db:name') + '-test');
+  nconf.set('db:name', nconf.get('db:name') + '-test');
+};
 
 exports.prepare = function (done) {
+  if (!nconf.get('db')) {
+    exports.prepareNconf();
+  }
+
   app = express();
 
   require('./../config/mongoose')();    // configure and open mongo connection
@@ -49,13 +55,13 @@ exports.cleanup = function (done) {
       throw err;
     }
 
-    require('mongoose').disconnect();
-
-    if (server) {
-      server.close(done);
-    } else {
-      done();
-    }
+    require('mongoose').disconnect(function () {
+      if (server) {
+        server.close(done);
+      } else {
+        done();
+      }
+    });
   });
 };
 

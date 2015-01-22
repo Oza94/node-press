@@ -1,9 +1,24 @@
 
 var mongoose  = require('mongoose'),
-  moment    = require('moment'),
-  Article   = mongoose.model('Article');
+  moment      = require('moment'),
+  Article     = mongoose.model('Article'),
+  passport    = require('passport'),
+  express     = require('express'),
+  auth        = require('./../middlewares/auth');
 
-exports.view = function (req, res) {
+module.exports = (function () {
+  var router = express.Router();
+
+  router.get('/drafts', auth.requireLogin, drafts);
+  router.get('/article/:slug', view);
+  router.get('/article/edit/new', auth.requireLogin, edit);
+  router.get('/article/edit/:slug', auth.requireLogin, edit);
+  router.post('/article/edit', auth.requireLogin, save);
+
+  return router;
+})();
+
+function view(req, res) {
   Article.findOne({slug: req.params.slug}, function (err, article) {
     if (err) {
       throw err;
@@ -15,9 +30,9 @@ exports.view = function (req, res) {
       article: article
     });
   });
-};
+}
 
-exports.drafts = function (req, res) {
+function drafts(req, res) {
   Article.find({})
     .sort('-createdAt')
     .where('published').ne(true)
@@ -30,9 +45,7 @@ exports.drafts = function (req, res) {
         articles: articles
       });
     });
-};
-
-
+}
 
 function edit(req, res) {
   if (req.params.slug && req.params.slug !== '') {

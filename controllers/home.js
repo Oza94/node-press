@@ -1,8 +1,19 @@
 
 var mongoose = require('mongoose'),
-    Article    = mongoose.model('Article');
+  Article    = mongoose.model('Article'),
+  passport   = require('passport'),
+  express    = require('express'),
+  auth       = require('./../middlewares/auth');
 
-exports.index = function (req, res) {
+module.exports = (function () {
+  var router = express.Router();
+
+  router.get('/', index);
+
+  return router;
+})();
+
+function index(req, res) {
   var limit = req.query.per_page || 10,
     page    = req.query.page || 0,
     skip    = page * limit;

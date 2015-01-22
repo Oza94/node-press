@@ -1,27 +1,33 @@
 
-/*global describe, it, after, afterEach, before */
+/*global describe, it, before, after, beforeEach, afterEach */
 
-var server  = require('./server'),
-  mongoose  = require('mongoose'),
-  expect    = require('chai').expect;
+var helper = require('./../helper'),
+  expect   = require('chai').expect,
+  User     = null;
+
+helper.options({
+  db: true
+});
+
+helper.setTestData('User', {
+  username: 'test',
+  password: 'test',
+  email: 'test@test.test'
+});
 
 describe('user#model', function () {
-  var User;
+  before(helper.prepare({
+    db: true,
+    testData: {
+      User: require('./../fixtures/test-user.json')
+    }
+  }));
+  after(helper.cleanup());
 
-  before(function () {
-    require('./../config/mongoose')();
-
-    User = mongoose.model('User');
+  beforeEach(function () {
+    User = require('mongoose').model('User');
   });
-
-  after(function (done) {
-    mongoose.disconnect(done);
-  });
-
-  // flush database
-  afterEach(function (done) {
-    User.remove({}, done);
-  });
+  afterEach(helper.deleteTestData());
 
   it('should create an user', function (done) {
     var user = new User({
@@ -96,30 +102,18 @@ describe('user#model', function () {
   });
 
   describe('authenticate()', function () {
-    var user;
+    beforeEach(helper.createTestData());
 
-    beforeEach(function (done) {
-      user = new User({
-        username: 'test',
-        email: 'test@test.test',
-        password: 'test'
-      });
-
-      user.save(done);
-    });
-
-    afterEach(function (done) {
-      User.remove({}, done);
-    });
+    afterEach(helper.deleteTestData());
 
     it('should return true if password match', function () {
-      var res = user.authenticate('test');
+      var res = helper.getTestUser().authenticate('test');
 
       expect(res).to.be.equal(true);
     });
 
     it('should return false if password mismatch', function () {
-      var res = user.authenticate('false');
+      var res = helper.getTestUser().authenticate('false');
 
       expect(res).to.be.equal(false);
     });

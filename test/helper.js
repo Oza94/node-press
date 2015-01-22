@@ -11,8 +11,6 @@ var nconf    = require('nconf'),
     agent    = null,
     testUser = null;
 
-logger.remove(logger.transports.Console); // mute logging during tests
-
 exports.options = function (options) {
   opts = options;
 
@@ -34,6 +32,12 @@ exports.prepare = function (options) {
     var functions = [
       exports._prepareNconf
     ];
+
+    //todo: remove this unnecessary check
+    if (require('mongoose').Connection.STATES.connected ===
+        require('mongoose').connection.readyState) {
+      functions.push(exports._cleanupDb);
+    }
 
     if (opts.db || opts.http || opts.session) {
       functions.push(exports._prepareDb);
@@ -63,7 +67,21 @@ exports._prepareNconf = function (done) {
       .env()
       .file({file: './settings.defaults.json'});
 
+  // use a test database
   nconf.set('db:name', nconf.get('db:name') + '-test');
+
+  // use a test port
+  nconf.set('http:port', nconf.get('http:port') + 1);
+
+  // remove default winston transport
+  logger.remove(logger.transports.Console);
+
+  if (!nconf.get('test:logging')) {
+    // log only errors
+    nconf.set('logger:console:level', 'error');
+  }
+
+  logger.add(logger.transports.Console, nconf.get('logger:console'));
 
   done();
 };
@@ -143,7 +161,11 @@ exports._cleanupNconf = function (done) {
 
 exports._cleanupDb = function (done) {
   exports.deleteTestData()(function () {
-    require('mongoose').disconnect(done);
+    require('mongoose').disconnect(function (err) {
+      if(err) throw err;
+
+      done();
+    });
   });
 };
 

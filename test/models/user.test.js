@@ -2,6 +2,7 @@
 /*global describe, it, before, after, beforeEach, afterEach */
 
 var helper = require('./../helper'),
+  async    = require('async'),
   expect   = require('chai').expect,
   User     = null;
 
@@ -46,6 +47,7 @@ describe('user#model', function () {
 
     var u1 = new User(data);
 
+    data = JSON.parse(JSON.stringify(data));
     data.email = 'test2@test.test';
 
     var u2 = new User(JSON.parse(JSON.stringify(data)));
@@ -73,6 +75,7 @@ describe('user#model', function () {
 
     var u1 = new User(data);
 
+    data = JSON.parse(JSON.stringify(data));
     data.username = 'test2';
 
     var u2 = new User(JSON.parse(JSON.stringify(data)));

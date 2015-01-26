@@ -164,7 +164,9 @@ exports._cleanupDb = function (done) {
     require('mongoose').disconnect(function (err) {
       if(err) throw err;
 
-      done();
+      // wait a bit to let mongoose finish its pending tasks
+      // todo: change that
+      setTimeout(done, 100);
     });
   });
 };

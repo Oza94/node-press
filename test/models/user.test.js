@@ -5,16 +5,6 @@ var helper = require('./../helper'),
   expect   = require('chai').expect,
   User     = null;
 
-helper.options({
-  db: true
-});
-
-helper.setTestData('User', {
-  username: 'test',
-  password: 'test',
-  email: 'test@test.test'
-});
-
 describe('user#model', function () {
   before(helper.prepare({
     db: true,

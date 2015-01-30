@@ -57,12 +57,14 @@ describe('user#model', function () {
         throw err;
       }
 
-      u2.save(function (err, u2) {
-        //expect(err).to.exist();
-        expect(u2).to.not.exist();
+      setTimeout(function () {
+        u2.save(function (err2, u2) {
+          expect(err2).to.exist();
+          expect(u2).to.not.exist();
 
-        done();
-      });
+          done();
+        });
+      }, 100);
     });
   });
 
@@ -85,8 +87,8 @@ describe('user#model', function () {
         throw err;
       }
 
-      u2.save(function (err, u2) {
-        //expect(err).to.exist();
+      u2.save(function (err2, u2) {
+        expect(err2).to.exist();
         expect(u2).to.not.exist();
 
         done();

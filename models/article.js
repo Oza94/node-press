@@ -14,8 +14,7 @@ var articleSchema = mongoose.Schema({
     required: true
   },
   slug: {
-    type: String,
-    required: true,
+    type: String
   },
   content: {
     type: String,
@@ -32,11 +31,6 @@ var articleSchema = mongoose.Schema({
   preview : {
     type: String,
     default : ""
-  },
-  createAt: {
-    type: Date,
-    default : Date.now,
-    require: true
   },
   publishAt: {
     type: Date

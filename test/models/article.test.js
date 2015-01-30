@@ -16,6 +16,7 @@ describe('article#model', function () {
           User: require('./../fixtures/test-user.json')
         }
       }),
+      helper.createTestData(),
       function (done) {
         Article = require('mongoose').model('Article');
 

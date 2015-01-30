@@ -38,64 +38,6 @@ describe('user#model', function () {
     });
   });
 
-  it('should not duplicate email', function (done) {
-    var data = {
-      username: 'test',
-      email: 'test1@test.test',
-      password: 'test'
-    };
-
-    var u1 = new User(data);
-
-    data = JSON.parse(JSON.stringify(data));
-    data.email = 'test2@test.test';
-
-    var u2 = new User(JSON.parse(JSON.stringify(data)));
-
-    u1.save(function (err, u1) {
-      if (err) {
-        throw err;
-      }
-
-      setTimeout(function () {
-        u2.save(function (err2, u2) {
-          expect(err2).to.exist();
-          expect(u2).to.not.exist();
-
-          done();
-        });
-      }, 100);
-    });
-  });
-
-  it('should not duplicate username', function (done) {
-    var data = {
-      username: 'test1',
-      email: 'test@test.test',
-      password: 'test'
-    };
-
-    var u1 = new User(data);
-
-    data = JSON.parse(JSON.stringify(data));
-    data.username = 'test2';
-
-    var u2 = new User(JSON.parse(JSON.stringify(data)));
-
-    u1.save(function (err, u1) {
-      if (err) {
-        throw err;
-      }
-
-      u2.save(function (err2, u2) {
-        expect(err2).to.exist();
-        expect(u2).to.not.exist();
-
-        done();
-      });
-    });
-  });
-
   describe('authenticate()', function () {
     beforeEach(helper.createTestData());
 

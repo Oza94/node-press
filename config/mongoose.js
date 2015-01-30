@@ -8,7 +8,7 @@ var nconf   = require('nconf'),
 /**
  * initialize mongoose
  */
-module.exports = function () {
+module.exports = function (done) {
   // mongoose initialisation
   var dbUrl = util.format('mongodb://%s/%s', nconf.get('db:host'),
       nconf.get('db:name'));
@@ -21,6 +21,10 @@ module.exports = function () {
       process.exit(1);
     } else {
       logger.info('connected to database', dbUrl);
+    }
+
+    if (done) {
+      done(err);
     }
   });
 
